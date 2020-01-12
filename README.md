@@ -6,4 +6,4 @@
 
 如果你不熟悉 Markdown 的语法，可以从GitHub的在线 Markdown 编辑器开始，它将允许你在发布之前进行预览。 如果你需要更多帮助, [Markdown Cheat Sheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet) 将非常方便.
 
-有关模块和存储库的更多信息，请参阅 [官方文档](https://github.com/topjohnwu/Magisk/blob/master/docs/modules.md)
+有关模块和存储库的更多信息，请参阅 [官方文档](https://github.com/topjohnwu/Magisk/blob/master/docs/guides.md)
