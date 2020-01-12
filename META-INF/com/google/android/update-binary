@@ -107,7 +107,7 @@ if is_legacy_script; then
   # Custom 卸载程序
   [ -f $TMPDIR/uninstall.sh ] && cp -af $TMPDIR/uninstall.sh $MODPATH/uninstall.sh
 
-  # 自动挂载
+  # 取消挂载
   $SKIPMOUNT && touch $MODPATH/skip_mount
 
   # prop 文件

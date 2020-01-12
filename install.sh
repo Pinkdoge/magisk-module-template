@@ -22,9 +22,8 @@
 # 配置
 ##########################################################################################
 
-# 如果你需要启用 Magic Mount, 请把它设置为 true
-# 大多数模块都需要启用它
-AUTOMOUNT=true
+# 如果您不希望 Magisk 挂载, 请把它设置为true 
+SKIPMOUNT=false
 
 # 如果你需要加载 system.prop, 请把它设置为 true
 PROPFILE=false
@@ -36,18 +35,6 @@ POSTFSDATA=false
 LATESTARTSERVICE=false
 
 ##########################################################################################
-# 安装信息
-##########################################################################################
-
-# 在这里设置你想要在模块安装过程中显示的信息
-
-print_modname() {
-  ui_print "*******************************"
-  ui_print "        Magisk 模块示例        "
-  ui_print "*******************************"
-}
-
-##########################################################################################
 # 替换列表
 ##########################################################################################
 
@@ -55,7 +42,7 @@ print_modname() {
 # 查看文档，了解更多关于Magic Mount如何工作的信息，以及你为什么需要它
 
 # 这是个示例
-REPLACE="
+REPLACE_EXAMPLE="
 /system/app/Youtube
 /system/priv-app/SystemUI
 /system/priv-app/Settings
@@ -68,33 +55,86 @@ REPLACE="
 "
 
 ##########################################################################################
-# 权限设置
+#
+# Function Callbacks
+#
+# The following functions will be called by the installation framework.
+# You do not have the ability to modify update-binary, the only way you can customize
+# installation is through implementing these functions.
+#
+# When running your callbacks, the installation framework will make sure the Magisk
+# internal busybox path is *PREPENDED* to PATH, so all common commands shall exist.
+# Also, it will make sure /data, /system, and /vendor is properly mounted.
+#
 ##########################################################################################
+##########################################################################################
+#
+# The installation framework will export some variables and functions.
+# You should use these variables and functions for installation.
+#
+# ! DO NOT use any Magisk internal paths as those are NOT public API.
+# ! DO NOT use other functions in util_functions.sh as they are NOT public API.
+# ! Non public APIs are not guranteed to maintain compatibility between releases.
+#
+# Available variables:
+#
+# MAGISK_VER (string): the version string of current installed Magisk
+# MAGISK_VER_CODE (int): the version code of current installed Magisk
+# BOOTMODE (bool): true if the module is currently installing in Magisk Manager
+# MODPATH (path): the path where your module files should be installed
+# TMPDIR (path): a place where you can temporarily store files
+# ZIPFILE (path): your module's installation zip
+# ARCH (string): the architecture of the device. Value is either arm, arm64, x86, or x64
+# IS64BIT (bool): true if $ARCH is either arm64 or x64
+# API (int): the API level (Android version) of the device
+#
+# Availible functions:
+#
+# ui_print <msg>
+#     print <msg> to console
+#     Avoid using 'echo' as it will not display in custom recovery's console
+#
+# abort <msg>
+#     print error message <msg> to console and terminate installation
+#     Avoid using 'exit' as it will skip the termination cleanup steps
+#
+# set_perm <target> <owner> <group> <permission> [context]
+#     if [context] is empty, it will default to "u:object_r:system_file:s0"
+#     this function is a shorthand for the following commands
+#       chown owner.group target
+#       chmod permission target
+#       chcon context target
+#
+# set_perm_recursive <directory> <owner> <group> <dirpermission> <filepermission> [context]
+#     if [context] is empty, it will default to "u:object_r:system_file:s0"
+#     for all files in <directory>, it will call:
+#       set_perm file owner group filepermission context
+#     for all directories in <directory> (including itself), it will call:
+#       set_perm dir owner group dirpermission context
+#
+##########################################################################################
+##########################################################################################
+# If you need boot scripts, DO NOT use general boot scripts (post-fs-data.d/service.d)
+# ONLY use module scripts as it respects the module status (remove/disable) and is
+# guaranteed to maintain the same behavior in future Magisk releases.
+# Enable boot scripts by setting the flags in the config section above.
+##########################################################################################
+
+# Set what you want to display when installing your module
+
+# Only some special files require specific permissions
+# This function will be called after on_install is done
+# The default permissions should be good enough for most cases
 
 set_permissions() {
-  # 只有一些特殊文件需要特定的权限
-  # 默认的权限应该适用于大多数情况
+  # 以下是默认权限，请勿删除
+  set_perm_recursive $MODPATH 0 0 0755 0644
 
   # 下面是 set_perm 函数的一些示例:
-
-  # set_perm_recursive  <目录>                <所有者> <用户组> <目录权限> <文件权限> <上下文> (默认值是: u:object_r:system_file:s0)
-  # set_perm_recursive  $MODPATH/system/lib       0       0       0755        0644
-
-  # set_perm  <文件名>                         <所有者> <用户组> <文件权限> <上下文> (默认值是: u:object_r:system_file:s0)
-  # set_perm  $MODPATH/system/bin/app_process32   0       2000      0755       u:object_r:zygote_exec:s0
-  # set_perm  $MODPATH/system/bin/dex2oat         0       2000      0755       u:object_r:dex2oat_exec:s0
-  # set_perm  $MODPATH/system/lib/libart.so       0       0         0644
-
-  # 以下是默认权限，请勿删除
-  set_perm_recursive  $MODPATH  0  0  0755  0644
+  # set_perm_recursive  $MODPATH/system/lib       0     0       0755      0644
+  # set_perm  $MODPATH/system/bin/app_process32   0     2000    0755      u:object_r:zygote_exec:s0
+  # set_perm  $MODPATH/system/bin/dex2oat         0     2000    0755      u:object_r:dex2oat_exec:s0
+  # set_perm  $MODPATH/system/lib/libart.so       0     0       0644
 }
 
-##########################################################################################
-# 自定义函数
-##########################################################################################
-
-# 这个文件 (config.sh) 将被安装脚本在 util_functions.sh 之后 source 化(设置为环境变量)
-# 如果你需要自定义操作, 请在这里以函数方式定义它们, 然后在 update-binary 里调用这些函数
-# 不要直接向 update-binary 添加代码，因为这会让你很难将模块迁移到新的模板版本
-# 尽量不要对 update-binary 文件做其他修改，尽量只在其中执行函数调用
-
+# You can add more functions to assist your custom script code
