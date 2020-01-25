@@ -143,7 +143,7 @@ fi
 
 # 处理 replace 文件夹
 for TARGET in $REPLACE; do
-  ui_print "- Replace target: $TARGET"
+  ui_print "- 正在删除目标文件: $TARGET"
   mktouch $MODPATH$TARGET/.replace
 done
 
