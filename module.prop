@@ -1,7 +1,7 @@
+# id 只能填 字母 数字 半角符号
 id=template
 name=模块模板
 version=v1
 versionCode=1
-author=topjohnwu
+author=Pinkdoge
 description=一个简短的描述
-minMagisk=17000
