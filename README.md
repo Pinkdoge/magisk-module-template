@@ -3,7 +3,7 @@
 
 `这是Magisk模块最基础的结构`
 ```
-module.zip   <--- 只能填 字母 数字 半角符号
+module.zip
 │
 ├── META-INF
 │   └── com
