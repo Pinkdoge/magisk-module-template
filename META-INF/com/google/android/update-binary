@@ -23,7 +23,7 @@ ui_print() { echo "$1"; }
 
 require_new_magisk() {
   ui_print "*******************************"
-  ui_print " 请安装 Magisk v19.0+! "
+  ui_print " 请安装 Magisk v20.3+! "
   ui_print "*******************************"
   exit 1
 }
