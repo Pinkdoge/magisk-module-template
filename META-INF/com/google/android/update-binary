@@ -4,7 +4,7 @@
 #
 # Magisk 模块安装脚本模板
 # by topjohnwu
-# 翻译: cjybyjk
+# 20.2以下版本适配: cjybyjk
 # 20.2以上版本适配: Pinkdoge
 #
 #####################################################
@@ -42,7 +42,7 @@ print_modname() {
   ui_print " $MODNAME "
   ui_print "$pounds"
   ui_print "******************************"
-  ui_print " 由 Magisk 提供技术支持 "
+  ui_print " 由 Magisk 提供技术支持(在安装模块时打印作者信息) "
   ui_print "******************************"
 }
 
@@ -104,7 +104,7 @@ if is_legacy_script; then
   print_modname
   on_install
 
-  # Custom 卸载程序
+  # 加载自定义卸载脚本
   [ -f $TMPDIR/uninstall.sh ] && cp -af $TMPDIR/uninstall.sh $MODPATH/uninstall.sh
 
   # 取消挂载
@@ -153,15 +153,15 @@ if $BOOTMODE; then
   cp -af $MODPATH/module.prop $NVBASE/modules/$MODID/module.prop
 fi
 
-# 复制 Custom sepolicy 规则
+# 安装自定义 sepolicy 补丁
 if [ -f $MODPATH/sepolicy.rule -a -e $PERSISTDIR ]; then
-  ui_print "- 安装 Custom sepolicy 补丁"
+  ui_print "- 安装自定义 sepolicy 补丁"
   PERSISTMOD=$PERSISTDIR/magisk/$MODID
   mkdir -p $PERSISTMOD
   cp -af $MODPATH/sepolicy.rule $PERSISTMOD/sepolicy.rule
 fi
 
-# 删除 placeholder
+# 删除 placeholder 文件
 rm -rf \
 $MODPATH/system/placeholder $MODPATH/customize.sh \
 $MODPATH/README.md $MODPATH/.git* 2>/dev/null

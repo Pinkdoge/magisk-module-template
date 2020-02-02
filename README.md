@@ -18,8 +18,8 @@ module.zip
 ├── ...  /* 模块文件的其余部分 */
 |
 ```
-**由于官方没有发布新模板模块,如遇到 bug 请及时向 [我](http://www.coolapk.com/u/1124169) 反馈**
+**[Magisk 官方新模块模板](https://github.com/HANA-CI-Build-Project/magisk-module-template) 已发布**
 
-**[Magisk面具新版模板模块制作教程](https://www.coolapk.com/feed/16056941?shareKey=YWI0MDFiYWE1Y2E3NWUyYzA3ODc~&shareUid=1124169&shareFrom=com.coolapk.market_10.0.1) 感谢@碎念**
+**[Magisk 面具新版模板模块制作教程](https://www.coolapk.com/feed/16056941?shareKey=YWI0MDFiYWE1Y2E3NWUyYzA3ODc~&shareUid=1124169&shareFrom=com.coolapk.market_10.0.1) 感谢@碎念**
 
-有关模块和存储库的更多信息，请参阅 [官方文档](https://topjohnwu.github.io/Magisk/guides.html)
+有关模块和存储库的更多信息 请查看 [Magisk 官方文档](https://topjohnwu.github.io/Magisk/guides.html)
