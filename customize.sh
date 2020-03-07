@@ -2,12 +2,13 @@
 SKIPUNZIP=0
 
 # 删除文件
-REPLACE="
 # 以下是一些例子
 # /system/app/Youtube
 # /system/priv-app/SystemUI
 # /system/priv-app/Settings
 # /system/framework
+REPLACE="
+
 "
 
 # 设置权限
